@@ -11,11 +11,16 @@ class Piece
 {
 protected:
 	string name;
-	string currentPosition;
-	bool isWhite; //yeslai child class bata piece class ma haldeko
+	bool isWhite;
+	bool alive;
+	//string currentPosition;
 public:
-	//bool lai int gareko hai yah maile
-	virtual int MovesInEmptyBoard(string initialPosition, string finalPosition) = 0;
+	//void setCurrentPosition(string position);
+	string myName();
+	virtual int movesInEmptyBoard(string initialPosition, string finalPosition) = 0;
+	bool isAlive() { return alive; }
+	bool kill();
+	bool getColor() { return isWhite; }
 };
 
 class King:public Piece
@@ -40,8 +45,8 @@ public:
 class Bishop :public Piece
 {
 public:
-	Bishop(string currentPosition, string color);
-	int MovesInEmptyBoard(string initialPosition, string finalPosition);
+	Bishop(string color);
+	int movesInEmptyBoard(string initialPosition, string finalPosition);
 };
 
 class Rook :public Piece
@@ -51,8 +56,9 @@ public:
 	int MovesInEmptyBoard(string initialPosition, string finalPosition);
 };
 
-class Knight :public Piece
+class Queen :public Piece
 {
-	Knight(string currentPosition, string color);
-	int MovesInEmptyBoard(string initialPosition, string finalPosition);
+public:
+	Queen(string color);
+	int movesInEmptyBoard(string initialPosition, string finalPosition);
 };

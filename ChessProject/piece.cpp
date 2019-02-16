@@ -1,4 +1,4 @@
- #include "piece.h"
+#include "piece.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -21,7 +21,7 @@ int getPositionInInteger(string position)
 King::King(string currentPosition,string color)
 {
 	name = "King";
-	this->currentPosition = currentPosition;
+	alive = true;
 	if (color == "white")
 	{
 		this->isWhite = 1;
@@ -61,61 +61,20 @@ int King::MovesInEmptyBoard(string initialPosition,string finalPosition)
 	return 0;
 }
 
-Pawn::Pawn(string currentPosition, string color)
-{
-	name = "Pawn";
-	this->currentPosition = currentPosition;
-	if (color == "white")
-	{
-		this->isWhite = true;
-		this->moveRefFile.open("PawnBottomMove.txt");
-		this->eatRefFile.open("PawnBottomEat.txt");
-	}
-	else
-	{
-		this->isWhite = false;
-		this->moveRefFile.open("PawnTopMove.txt");
-		this->eatRefFile.open("PawnTopEat.txt");
-	}
-}
 
-int Pawn::MovesInEmptyBoard(string initialPosition, string finalPosition)
-{
-	int initialPosEquivInteger = getPositionInInteger(initialPosition);
-	int finalPosEquivInteger = getPositionInInteger(finalPosition);
-	string initialPosMoveValue, initalPosEatValue;
-	for (int i = 0; i <= initialPosEquivInteger; i++)
-	{
-		std::getline(this->moveRefFile, initialPosMoveValue);
-		std::getline(this->eatRefFile, initalPosEatValue);
-	}
-	if ((initialPosMoveValue[finalPosEquivInteger]-'0') == 1)
-	{
-		this->moveRefFile.seekg(0, std::ios::beg);
-		return 1;
-	}
-	else if ((initalPosEatValue[finalPosEquivInteger] - '0') == 1)
-	{
-		this->eatRefFile.seekg(0, std::ios::beg);
-		return 2;
-	}
-	this->moveRefFile.seekg(0, std::ios::beg);
-	this->eatRefFile.seekg(0, std::ios::beg);
-	return 0;
-}
-
-//ettikai check garna halya ho
-void Pawn::anything()
-{
-	std::cout << "sdvsvzdv";
-}
-
-Bishop::Bishop(string currentPosition, string color)
+Bishop::Bishop(string color)
 {
 	this->name = "Bishop";
-	this->currentPosition = currentPosition;
-	if (color == "white"){ isWhite = true; }
-	else{ isWhite = false; }
+	alive = true;
+	//this->currentPosition = currentPosition;
+	if (color == "white")
+	{ 
+		isWhite = true; 
+	}
+	else 
+	{ 
+		isWhite = false;
+	}
 }
 
 int Bishop::MovesInEmptyBoard(string initialPosition, string finalPosition)
@@ -126,37 +85,53 @@ int Bishop::MovesInEmptyBoard(string initialPosition, string finalPosition)
 	verticalPosDiff = finalPositionInNumber[0] - initialPositionInNumber[0];
 	horizontalPosDiff = finalPositionInNumber[1] - initialPositionInNumber[1];
 	if (verticalPosDiff == 0) { return 0; }
-	else if (verticalPosDiff == horizontalPosDiff) { return 1; }
+	else if (abs(verticalPosDiff) == abs(horizontalPosDiff)) { return 1; }
 	else { return 0; }
 }
 
-Rook::Rook(string currentPosition, string color)
+bool Piece::kill()
 {
-	this->name = "Rook";
-	//this->currentPosition = currentPosition;
-	if (color == "white") { isWhite = true; }
-	else { isWhite = false; }
+	if (alive)
+	{
+		alive = 0;
+		std::cout << "piece killed successfully";
+		return 1;
+	}
+	else
+	{
+		std::cout << "Piece already dead";
+		return 0;
+	}
 }
-
-int Rook::MovesInEmptyBoard(string initialPosition, string finalPosition)
+Queen::Queen(string color)
+{
+	this->name = "Queen";
+	alive = true;
+	if (color == "white")
+	{
+		isWhite = true;
+	}
+	else
+	{
+		isWhite = false;
+	}
+}
+ 
+int Queen::movesInEmptyBoard(string initialPosition, string finalPosition)
 {
 	vector<int> initialPositionInNumber = getPositionInVector(initialPosition);
 	vector<int> finalPositionInNumber = getPositionInVector(finalPosition);
-	int checkColumn = finalPositionInNumber[0] - initialPositionInNumber[0];
-	int checkRow= finalPositionInNumber[1] - initialPositionInNumber[1];
-	if (checkColumn == 0 && checkRow !=0) { return 1;}
-	else if (checkRow == 0 && checkColumn !=0) { return 1;}
-	else { return 0;}
+	//Straight move 
+	bool inStraightLine = (initialPositionInNumber[0] == finalPositionInNumber[0]) || (initialPositionInNumber[1] == finalPositionInNumber[1]);
+	int verticalDifference = abs(finalPositionInNumber[0] - initialPositionInNumber[0]);
+	int horizontalDifference = abs(finalPositionInNumber[1] - initialPositionInNumber[1]);
+	bool inDiagonalLine = (verticalDifference == horizontalDifference);
+	if (inStraightLine || inDiagonalLine)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
 }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
