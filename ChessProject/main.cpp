@@ -1,38 +1,32 @@
 #include <iostream>
-#include "game.h"
+#include "piece.h"
+#include "board.h"
 using std::cout;
-using std::cin;
 int main()
 {
-	King whiteKing("white");
-	King blackKing("black");
-	OnePiece noPiece("white");
-
+	King whiteKing("e1", "white");
+	King blackKing("e8", "black");
+	Pawn whitePawn("a2", "white");
+	Pawn blackPawn("d4", "black");
+	Bishop whiteBishop("e4", "white");
+	Rook blackRook("e5", "black");
+	Rook whiteRook("a8", "black");
 	Board myBoard[8][8];
-	setBoard(myBoard,&noPiece);
+	setBoard(myBoard);
 	Board(*pointer)[8][8] = &myBoard;
+	//yeh ma [0][4] ki [1][4]
 	myBoard[1][4].currentPiece = &whiteKing;
-	myBoard[7][4].currentPiece = &blackKing;
-	Game myGame("Player1", "Player2", &myBoard,&noPiece);
-	cout << (*myGame.currentBoard)[1][4].currentPiece->myName();
-	/*myGame.moveToEmptySquare("e2e3");
-	//cout << "\n" << (*mygame.currentBoard)[1][4].currentPiece->movesInEmptyBoard("e2", "e3");
-	cout <<"New Name" << (*myGame.currentBoard)[2][4].currentPiece->myName();
-	myGame.moveToEmptySquare("e3e1");*/
-	int count = 1;
-	while (!myGame.isGameOver())
-	{
-		string move;
-		cout << (myGame.getCurrentPlayer() ? "\nWhite:" : "\nBlack:");
-		cout << "\nEnter move:";
-		cin >> move;
-		if (myGame.moveToEmptySquare(move))
-		{
-			myGame.changeTurn();
-			count++;
-			if (count == 3) myGame.endGame();
-		}
-
-	}
-
+	myBoard[1][0].currentPiece = &whitePawn;
+	myBoard[3][3].currentPiece = &blackPawn;
+	myBoard[3][4].currentPiece = &whiteBishop;
+	myBoard[1][3].currentPiece = &whiteRook;
+	myBoard[3][2].currentPiece = &blackRook;	
+	cout << (*pointer)[1][4].currentPiece->MovesInEmptyBoard("e2", "e4");
+	cout << (*pointer)[1][0].currentPiece->MovesInEmptyBoard("a2", "b3");
+	//how to access member function in pawn as above-anything->anything
+	cout << (*pointer)[3][3].currentPiece->MovesInEmptyBoard("d4", "d3");
+	cout << (*pointer)[3][4].currentPiece->MovesInEmptyBoard("e4", "d4");
+	cout << (*pointer)[1][3].currentPiece->MovesInEmptyBoard("a8", "d1");
+	cout << (*pointer)[3][2].currentPiece->MovesInEmptyBoard("e5", "e1");
+	
 }
